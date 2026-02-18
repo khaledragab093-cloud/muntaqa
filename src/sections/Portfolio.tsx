@@ -12,12 +12,24 @@ interface PortfolioItem {
   duration: string;
 }
 
+// دالة ذكية لاستخراج كود اليوتيوب وتشغيل الفيديو تلقائياً
+const getYouTubeEmbedUrl = (url: string) => {
+  if (!url || url === '#') return null;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11)
+    ? `https://www.youtube.com/embed/${match[2]}?autoplay=1`
+    : null;
+};
+
 const portfolioItems: PortfolioItem[] = [
   {
     id: 1,
     title: 'استراتيجية النمو الرقمي',
     category: 'تسويق رقمي',
-    thumbnail: 'https://i9.ytimg.com/vi/cTadY9jqWAs/mqdefault_custom_1.jpg?v=69460f35&sqp=CIid2MwG&rs=AOn4CLB8D2S82byXqR8VRBWlJ5UxZ3DVKA',
+    // رابط الصورة المصغرة المباشر من يوتيوب
+    thumbnail: 'https://img.youtube.com/vi/cTadY9jqWAs/maxresdefault.jpg',
+    // رابط الفيديو العادي من يوتيوب
     videoUrl: 'https://youtu.be/cTadY9jqWAs',
     views: '125K',
     duration: '2:45',
@@ -106,102 +118,4 @@ export default function Portfolio() {
           <span className="inline-block px-4 py-1 rounded-full bg-gold/10 text-gold text-sm mb-4">
             أعمالنا
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white font-kufi mb-4">
-            معرض <span className="text-gradient-gold">الأعمال</span>
-          </h2>
-          <p className="text-white/60 max-w-2xl mx-auto">
-            نماذج من أعمال فريق مُنْتَقَى التي نفخر بها، محتوى احترافي يحقق النتائج
-          </p>
-        </div>
-
-        {/* Portfolio Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {portfolioItems.map((item, index) => (
-            <div
-              key={item.id}
-              className={`group relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-700 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
-              }`}
-              style={{ transitionDelay: `${(index % 6) * 100 + 200}ms` }}
-              onClick={() => setSelectedVideo(item)}
-            >
-              {/* Thumbnail */}
-              <div className="aspect-video relative overflow-hidden">
-                <img
-                  src={item.thumbnail}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-300" />
-                
-                {/* Play Button */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-gold/90 flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300 shadow-gold">
-                    <Play className="w-7 h-7 text-dark mr-1" fill="currentColor" />
-                  </div>
-                </div>
-
-                {/* Duration Badge */}
-                <div className="absolute top-3 right-3 px-2 py-1 rounded-md bg-black/60 text-white text-xs font-medium">
-                  {item.duration}
-                </div>
-
-                {/* Category Badge */}
-                <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-gold/20 text-gold text-xs font-medium backdrop-blur-sm">
-                  {item.category}
-                </div>
-
-                {/* Info */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                  <h3 className="text-white font-bold text-lg mb-1 font-kufi">{item.title}</h3>
-                  <div className="flex items-center gap-4 text-white/60 text-sm">
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-4 h-4" />
-                      {item.views}
-                    </span>
-                    <span className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <ExternalLink className="w-4 h-4" />
-                      مشاهدة
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Video Dialog */}
-      <Dialog open={!!selectedVideo} onOpenChange={() => setSelectedVideo(null)}>
-        <DialogContent className="glass-card border-gold/20 max-w-4xl p-0 overflow-hidden">
-          <div className="aspect-video bg-black flex items-center justify-center">
-            {selectedVideo && (
-              <div className="text-center">
-                <Play className="w-20 h-20 text-gold mx-auto mb-4" />
-                <p className="text-white text-lg">{selectedVideo.title}</p>
-                <p className="text-white/50 text-sm mt-2">سيتم تشغيل الفيديو هنا</p>
-              </div>
-            )}
-          </div>
-          <div className="p-6">
-            {selectedVideo && (
-              <>
-                <h3 className="text-xl font-bold text-white font-kufi mb-2">{selectedVideo.title}</h3>
-                <div className="flex items-center gap-4 text-white/60 text-sm">
-                  <span className="px-3 py-1 rounded-full bg-gold/10 text-gold">{selectedVideo.category}</span>
-                  <span className="flex items-center gap-1">
-                    <Eye className="w-4 h-4" />
-                    {selectedVideo.views} مشاهدة
-                  </span>
-                  <span>{selectedVideo.duration}</span>
-                </div>
-              </>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-    </section>
-  );
-}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white font-kufi
