@@ -17,7 +17,7 @@ const portfolioItems: PortfolioItem[] = [
     id: 1,
     title: 'استراتيجية النمو الرقمي',
     category: 'تسويق رقمي',
-    thumbnail: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=400&fit=crop',
+    thumbnail: 'https://youtu.be/cTadY9jqWAs',
     videoUrl: '#',
     views: '125K',
     duration: '2:45',
